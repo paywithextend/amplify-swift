@@ -96,8 +96,8 @@ extension Amplify {
 
     /// Configures Amplify with the specified configuration.
     ///
-    /// This method must be invoked after registering plugins, and before using any Amplify category. It must not be
-    /// invoked more than once.
+    /// This method must be invoked after registering plugins, and before using any Amplify category.
+    /// It can be invoked multiple times to reconfigure Amplify with a new configuration.
     ///
     /// **Lifecycle**
     ///
@@ -108,22 +108,31 @@ extension Amplify {
     /// After Amplify has configured all of its categories, it will dispatch a `HubPayload.EventName.Amplify.configured`
     /// event to each Amplify Hub channel. After this point, plugins may invoke calls on other Amplify categories.
     ///
+    /// **Reconfiguration**
+    ///
+    /// When called multiple times, this method will reset all categories and reconfigure them with the new configuration.
+    /// This is useful for scenarios like switching between different environments or updating configuration dynamically.
+    ///
+    /// **Note**: Reconfiguration will reset all existing categories and their state before applying the new configuration.
+    /// Any ongoing operations may be interrupted, and you may need to re-establish connections or state as needed.
+    ///
     /// - Parameter configuration: The AmplifyConfiguration for specified Categories
     ///
     /// - Tag: Amplify.configure
     public static func configure(_ configuration: AmplifyConfiguration? = nil) throws {
         log.info("Configuring")
         log.debug("Configuration: \(String(describing: configuration))")
-        guard !isConfigured else {
-            let error = ConfigurationError.amplifyAlreadyConfigured(
-                "Amplify has already been configured.",
-                """
-                Remove the duplicate call to `Amplify.configure()`
-                """
-            )
-            throw error
+        
+        if isConfigured {
+            log.info("Amplify is already configured, resetting for reconfiguration")
+            resetSynchronously()
         }
 
+        try performConfiguration(configuration)
+    }
+
+    /// Internal method that performs the actual configuration logic
+    private static func performConfiguration(_ configuration: AmplifyConfiguration?) throws {
         let resolvedConfiguration: AmplifyConfiguration
         do {
             resolvedConfiguration = try Amplify.resolve(configuration: configuration)
@@ -173,6 +182,16 @@ extension Amplify {
         isConfigured = true
 
         notifyAllHubChannels()
+    }
+
+    /// Synchronous wrapper for the async reset method
+    private static func resetSynchronously() {
+        let semaphore = DispatchSemaphore(value: 0)
+        Task {
+            await Amplify.reset()
+            semaphore.signal()
+        }
+        semaphore.wait()
     }
 
     /// Notifies all hub channels that Amplify is configured, in case any plugins need to be notified of the end of the

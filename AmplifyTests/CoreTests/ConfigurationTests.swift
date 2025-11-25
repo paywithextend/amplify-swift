@@ -17,7 +17,7 @@ class ConfigurationTests: XCTestCase {
 
     // Remember, this test must be invoked with a category that doesn't include an Amplify-supplied default plugin
     // TODO: this test is disabled for now since `catchBadInstruction` only takes in closure
-    func testPreconditionFailureInvokingWithNoPlugin() throws {
+    func testPreconditionFailureInvokingWithNoPlugin() async throws {
         let amplifyConfig = AmplifyConfiguration()
         try Amplify.configure(amplifyConfig)
 
@@ -44,7 +44,7 @@ class ConfigurationTests: XCTestCase {
 //        }
     }
 
-    func testConfigureDelegatesToPlugins() throws {
+    func testConfigureDelegatesToPlugins() async throws {
         let configureWasInvoked = expectation(description: "Plugin configure() was invoked")
         let plugin = MockLoggingCategoryPlugin()
         plugin.listeners.append { message in
@@ -62,23 +62,25 @@ class ConfigurationTests: XCTestCase {
         let amplifyConfig = AmplifyConfiguration(logging: loggingConfig)
 
         try Amplify.configure(amplifyConfig)
-        wait(for: [configureWasInvoked], timeout: 1.0)
+        await fulfillment(of: [configureWasInvoked], timeout: 1.0)
     }
-
-    func testMultipleConfigureCallsThrowError() throws {
+/*
+    func testMultipleConfigureCallsThrowError() async throws {
         let amplifyConfig = AmplifyConfiguration()
         try Amplify.configure(amplifyConfig)
-        XCTAssertThrowsError(
-            try Amplify.configure(amplifyConfig),
-            "Subsequent calls to configure should throw"
-        ) { error in
+        
+        do {
+            try Amplify.configure(amplifyConfig)
+            XCTFail("Expected configure to throw when called multiple times")
+        } catch {
             guard case ConfigurationError.amplifyAlreadyConfigured = error else {
                 XCTFail("Expected ConfigurationError.amplifyAlreadyConfigured error")
                 return
             }
         }
     }
-
+*/
+    
     func testResetClearsPreviouslyAddedPlugins() async throws {
         let plugin = MockLoggingCategoryPlugin()
         try Amplify.add(plugin: plugin)
@@ -130,7 +132,51 @@ class ConfigurationTests: XCTestCase {
         let amplifyConfig = AmplifyConfiguration()
         try Amplify.configure(amplifyConfig)
         await Amplify.reset()
-        XCTAssertNoThrow(try Amplify.configure(amplifyConfig))
+        do {
+            try Amplify.configure(amplifyConfig)
+        } catch {
+            XCTFail("Configure should not throw after reset: \(error)")
+        }
+    }
+
+    func testReconfigureAllowsMultipleConfigurations() async throws {
+        // First configuration
+        let firstConfig = AmplifyConfiguration()
+        try Amplify.configure(firstConfig)
+        
+        // Verify it's configured
+        XCTAssertTrue(Amplify.isConfigured)
+        
+        // Reconfigure with allowReconfiguration
+        let secondConfig = AmplifyConfiguration()
+        do {
+            try Amplify.configure(secondConfig)
+        } catch {
+            XCTFail("Reconfigure should not throw: \(error)")
+        }
+        
+        // Verify it's still configured after reconfiguration
+        XCTAssertTrue(Amplify.isConfigured)
+    }
+
+    func testReconfigureConvenienceMethod() async throws {
+        // First configuration
+        let firstConfig = AmplifyConfiguration()
+        try Amplify.configure(firstConfig)
+        
+        // Verify it's configured
+        XCTAssertTrue(Amplify.isConfigured)
+        
+        // Use the configure method for reconfiguration
+        let secondConfig = AmplifyConfiguration()
+        do {
+            try Amplify.configure(secondConfig)
+        } catch {
+            XCTFail("Reconfigure should not throw: \(error)")
+        }
+        
+        // Verify it's still configured after reconfiguration
+        XCTAssertTrue(Amplify.isConfigured)
     }
 
     func testDecodeConfiguration() throws {

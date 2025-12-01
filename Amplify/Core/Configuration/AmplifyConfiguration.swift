@@ -110,13 +110,11 @@ extension Amplify {
     ///
     /// **Reconfiguration**
     ///
-    /// When called multiple times, this method will reset all categories and reconfigure them with the new configuration.
-    /// This is useful for scenarios like switching between different environments or updating configuration dynamically.
-    ///
-    /// **Note**: Reconfiguration will reset all existing categories and their state before applying the new configuration.
-    /// Any ongoing operations may be interrupted, and you may need to re-establish connections or state as needed.
+    /// To reconfigure Amplify, you must first call `Amplify.reset()` to clear all categories and their state,
+    /// then add new plugins if needed, and finally call this configure method again with the new configuration.
     ///
     /// - Parameter configuration: The AmplifyConfiguration for specified Categories
+    /// - Throws: ConfigurationError if Amplify is already configured. Call `Amplify.reset()` first to reconfigure.
     ///
     /// - Tag: Amplify.configure
     public static func configure(_ configuration: AmplifyConfiguration? = nil) throws {
@@ -124,8 +122,10 @@ extension Amplify {
         log.debug("Configuration: \(String(describing: configuration))")
         
         if isConfigured {
-            log.info("Amplify is already configured, resetting for reconfiguration")
-            resetSynchronously()
+            throw ConfigurationError.amplifyAlreadyConfigured(
+                "Amplify is already configured. To reconfigure, call Amplify.reset() first.",
+                "Call Amplify.reset() before calling configure again."
+            )
         }
 
         try performConfiguration(configuration)

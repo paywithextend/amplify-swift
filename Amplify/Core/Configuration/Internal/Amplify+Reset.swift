@@ -17,7 +17,9 @@ extension Amplify {
     /// - Releases each configured category, and replaces the instances referred to by the static accessor properties
     ///   (e.g., `Amplify.Hub`) with new instances. These instances must subsequently have providers added, and be
     ///   configured prior to use.
-    static func reset() async {
+    ///
+    /// This method should be called before adding new plugins and reconfiguring Amplify.
+    public static func reset() async {
         // Looping through all categories to ensure we don't accidentally forget a category at some point in the future
         for categoryType in CategoryType.allCases {
             switch categoryType {

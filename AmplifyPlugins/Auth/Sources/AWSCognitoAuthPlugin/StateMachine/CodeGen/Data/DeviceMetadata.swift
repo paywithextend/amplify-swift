@@ -53,7 +53,7 @@ extension DeviceMetadata: CustomDebugDictionaryConvertible {
 
 extension DeviceMetadata: CustomDebugStringConvertible {
 
-    var debugDescription: String {
+    public var debugDescription: String {
         debugDictionary.debugDescription
     }
 }

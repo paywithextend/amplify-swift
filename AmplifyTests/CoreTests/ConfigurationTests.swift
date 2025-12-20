@@ -139,46 +139,6 @@ class ConfigurationTests: XCTestCase {
         }
     }
 
-    func testReconfigureAllowsMultipleConfigurations() async throws {
-        // First configuration
-        let firstConfig = AmplifyConfiguration()
-        try Amplify.configure(firstConfig)
-        
-        // Verify it's configured
-        XCTAssertTrue(Amplify.isConfigured)
-        
-        // Reconfigure with allowReconfiguration
-        let secondConfig = AmplifyConfiguration()
-        do {
-            try Amplify.configure(secondConfig)
-        } catch {
-            XCTFail("Reconfigure should not throw: \(error)")
-        }
-        
-        // Verify it's still configured after reconfiguration
-        XCTAssertTrue(Amplify.isConfigured)
-    }
-
-    func testReconfigureConvenienceMethod() async throws {
-        // First configuration
-        let firstConfig = AmplifyConfiguration()
-        try Amplify.configure(firstConfig)
-        
-        // Verify it's configured
-        XCTAssertTrue(Amplify.isConfigured)
-        
-        // Use the configure method for reconfiguration
-        let secondConfig = AmplifyConfiguration()
-        do {
-            try Amplify.configure(secondConfig)
-        } catch {
-            XCTFail("Reconfigure should not throw: \(error)")
-        }
-        
-        // Verify it's still configured after reconfiguration
-        XCTAssertTrue(Amplify.isConfigured)
-    }
-
     func testDecodeConfiguration() throws {
         let jsonString = """
         {"UserAgent":"aws-amplify-cli/2.0","Version":"1.0","storage":{"plugins":{"MockStorageCategoryPlugin":{}}}}

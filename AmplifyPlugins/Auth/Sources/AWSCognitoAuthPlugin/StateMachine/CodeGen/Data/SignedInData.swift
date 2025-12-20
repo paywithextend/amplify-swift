@@ -7,16 +7,16 @@
 
 import Foundation
 
-struct SignedInData {
-    let userId: String
-    let username: String
-    let signedInDate: Date
-    let signInMethod: SignInMethod
-    let deviceMetadata: DeviceMetadata
-    let cognitoUserPoolTokens: AWSCognitoUserPoolTokens
-    var isRefreshTokenExpired: Bool?
+public struct SignedInData {
+    public let userId: String
+    public let username: String
+    public let signedInDate: Date
+    public let signInMethod: SignInMethod
+    public let deviceMetadata: DeviceMetadata
+    public let cognitoUserPoolTokens: AWSCognitoUserPoolTokens
+    public var isRefreshTokenExpired: Bool?
 
-    init(
+    public init(
         signedInDate: Date,
         signInMethod: SignInMethod,
         deviceMetadata: DeviceMetadata = .noData,
@@ -30,29 +30,5 @@ struct SignedInData {
         self.deviceMetadata = deviceMetadata
         self.cognitoUserPoolTokens = cognitoUserPoolTokens
         self.isRefreshTokenExpired = false
-    }
-}
-
-extension SignedInData: Codable { }
-
-extension SignedInData: Equatable { }
-
-extension SignedInData: CustomDebugDictionaryConvertible {
-    var debugDictionary: [String: Any] {
-        [
-            "userId": userId.masked(),
-            "userName": username.masked(),
-            "signedInDate": signedInDate,
-            "signInMethod": signInMethod,
-            "deviceMetadata": deviceMetadata,
-            "tokens": cognitoUserPoolTokens,
-            "refreshTokenExpired": isRefreshTokenExpired ?? false
-        ]
-    }
-}
-
-extension SignedInData: CustomDebugStringConvertible {
-    var debugDescription: String {
-        debugDictionary.debugDescription
     }
 }

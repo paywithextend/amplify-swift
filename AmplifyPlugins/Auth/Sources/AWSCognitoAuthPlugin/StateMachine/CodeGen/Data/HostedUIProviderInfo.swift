@@ -8,7 +8,7 @@
 import Amplify
 import Foundation
 
-struct HostedUIProviderInfo: Equatable {
+public struct HostedUIProviderInfo: Equatable {
 
     let authProvider: AuthProvider?
 

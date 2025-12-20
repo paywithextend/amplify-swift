@@ -50,7 +50,7 @@ extension HostedUIOptions: Codable {
         case resource
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.scopes = try values.decode(Array.self, forKey: .scopes)
         self.providerInfo = try values.decode(HostedUIProviderInfo.self, forKey: .providerInfo)
@@ -63,7 +63,7 @@ extension HostedUIOptions: Codable {
         self.resource = try values.decodeIfPresent(String.self, forKey: .resource)
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(scopes, forKey: .scopes)
         try container.encode(providerInfo, forKey: .providerInfo)
@@ -79,7 +79,7 @@ extension HostedUIOptions: Codable {
 extension HostedUIOptions: Equatable { }
 
 #if os(iOS) || os(macOS) || os(visionOS)
-extension HostedUIOptions {
+public extension HostedUIOptions {
     init(
         scopes: [String],
         providerInfo: HostedUIProviderInfo,

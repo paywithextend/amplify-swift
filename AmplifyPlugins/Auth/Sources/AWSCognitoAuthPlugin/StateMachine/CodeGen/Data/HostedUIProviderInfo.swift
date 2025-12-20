@@ -22,13 +22,13 @@ extension HostedUIProviderInfo: Codable {
         case idpIdentifier
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         self.idpIdentifier = try values.decodeIfPresent(String.self, forKey: .idpIdentifier)
         self.authProvider = nil
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(idpIdentifier, forKey: .idpIdentifier)
     }

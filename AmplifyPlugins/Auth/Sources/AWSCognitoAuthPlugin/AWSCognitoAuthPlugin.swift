@@ -119,7 +119,7 @@ public final class AWSCognitoAuthPlugin: AWSCognitoAuthPluginBehavior {
             scopes: [],
             providerInfo: HostedUIProviderInfo(authProvider: nil, idpIdentifier: nil),
             presentationAnchor: nil,
-            preferPrivateSession: false,
+            preferPrivateSession: true,
             nonce: nil,
             language: nil,
             loginHint: nil,

@@ -8,7 +8,7 @@
 import Amplify
 import Foundation
 
-struct HostedUIOptions {
+public struct HostedUIOptions {
 
     let scopes: [String]
 

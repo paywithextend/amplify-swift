@@ -32,3 +32,27 @@ public struct SignedInData {
         self.isRefreshTokenExpired = false
     }
 }
+
+extension SignedInData: Codable { }
+
+extension SignedInData: Equatable { }
+
+extension SignedInData: CustomDebugDictionaryConvertible {
+    var debugDictionary: [String: Any] {
+        [
+            "userId": userId.masked(),
+            "userName": username.masked(),
+            "signedInDate": signedInDate,
+            "signInMethod": signInMethod,
+            "deviceMetadata": deviceMetadata,
+            "tokens": cognitoUserPoolTokens,
+            "refreshTokenExpired": isRefreshTokenExpired ?? false
+        ]
+    }
+}
+
+extension SignedInData: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        debugDictionary.debugDescription
+    }
+}

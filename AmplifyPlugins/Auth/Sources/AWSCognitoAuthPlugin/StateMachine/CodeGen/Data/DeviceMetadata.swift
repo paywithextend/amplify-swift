@@ -8,13 +8,13 @@
 import AWSCognitoIdentityProvider
 import Foundation
 
-enum DeviceMetadata {
+public enum DeviceMetadata {
 
     case metadata(Data)
 
     case noData
 
-    struct Data: Codable, Equatable {
+    public struct Data: Codable, Equatable {
         let deviceKey: String
         let deviceGroupKey: String
         let deviceSecret: String

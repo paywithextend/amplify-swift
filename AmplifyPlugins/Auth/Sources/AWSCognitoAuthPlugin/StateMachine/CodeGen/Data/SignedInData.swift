@@ -15,12 +15,14 @@ public struct SignedInData {
     public let deviceMetadata: DeviceMetadata
     public let cognitoUserPoolTokens: AWSCognitoUserPoolTokens
     public var isRefreshTokenExpired: Bool?
+    public let inputUsername: String?
 
     public init(
         signedInDate: Date,
         signInMethod: SignInMethod,
         deviceMetadata: DeviceMetadata = .noData,
-        cognitoUserPoolTokens: AWSCognitoUserPoolTokens
+        cognitoUserPoolTokens: AWSCognitoUserPoolTokens,
+        inputUsername: String? = nil
     ) {
         let user = try? TokenParserHelper.getAuthUser(accessToken: cognitoUserPoolTokens.accessToken)
         self.userId = user?.userId ?? "unknown"
@@ -30,6 +32,7 @@ public struct SignedInData {
         self.deviceMetadata = deviceMetadata
         self.cognitoUserPoolTokens = cognitoUserPoolTokens
         self.isRefreshTokenExpired = false
+        self.inputUsername = inputUsername
     }
 }
 
@@ -46,7 +49,8 @@ extension SignedInData: CustomDebugDictionaryConvertible {
             "signInMethod": signInMethod,
             "deviceMetadata": deviceMetadata,
             "tokens": cognitoUserPoolTokens,
-            "refreshTokenExpired": isRefreshTokenExpired ?? false
+            "refreshTokenExpired": isRefreshTokenExpired ?? false,
+            "inputUsername": inputUsername.masked()
         ]
     }
 }

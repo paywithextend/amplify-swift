@@ -1,5 +1,69 @@
 # Changelog
 
+## 2.58.1 (2026-05-06)
+
+### Bug Fixes
+
+- **auth**: Use inputUsername for device metadata lookup in rememberDevice/forgetDevice and add e2e tests (#4209)
+
+## 2.58.0 (2026-05-05)
+
+### Features
+
+- **storage**: add progress stall timeout for S3 uploads (#4162)
+
+### Bug Fixes
+
+- **auth**: Use inputUsername for device metadata lookup during token refresh (#4208)
+- **api**: recycle WebSocket and resubscribe on same-online network path change (#4202)
+
+## 2.57.0 (2026-04-21)
+
+### Features
+
+- **core**: make AmplifyOutputsData and all nested types public
+
+### Bug Fixes
+
+- **auth**: Consistent device metadata keychain key across auth flows (#4196)
+- **api**: remove custom query parameter allowlist (#4194)
+- **API**: Support '+' in query parameters and improve validation logic (#4137)
+
+## 2.56.0 (2026-04-15)
+
+### Features
+
+- **storage**: add support for upload presigned url (#4146)
+
+### Bug Fixes
+
+- **ci**: include Xcode version in cache keys to prevent stale artifacts (#4192)
+
+## 2.55.0 (2026-04-08)
+
+### Features
+
+- **firehose**: Add Firehose client (#4182)
+
+### Bug Fixes
+
+- using Hub category to fire configured event (#3995)
+- **kinesis**: enable full flush for cache (#4169)
+
+## 2.54.1 (2026-03-11)
+
+### Bug Fixes
+
+- **api**: populate the auth mode when parsing the request response. So AppSyncListProvider.getNextPage() will have the auth mode. (#4156)
+
+## 2.54.0 (2026-03-04)
+
+### Features
+
+- **kinesis**: fix retry logic for request-level errors (#4167)
+- **kinesis**: add Kinesis Client (#4141)
+- **foundation**: Add Foundation libraries (#4150)
+
 ## 2.53.3 (2026-01-15)
 
 ### Bug Fixes

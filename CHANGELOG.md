@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.58.4 (2026-06-30)
+
+### Bug Fixes
+
+- **auth**: disable URL caching in FoundationClientEngine (#4238)
+- occured -> occurred in AmplifyBigInt+Operations fatalError messages (#4221)
+
+## 2.58.3 (2026-06-15)
+
+### Bug Fixes
+
+- **auth**: defer keychain-sharing reconfigure during in-flight sign-in (#4231)
+
+## 2.58.2 (2026-06-04)
+
 ## 2.58.1 (2026-05-06)
 
 ### Bug Fixes

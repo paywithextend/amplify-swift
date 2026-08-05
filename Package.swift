@@ -9,7 +9,7 @@ let platforms: [SupportedPlatform] = [
     .watchOS(.v9)
 ]
 let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/awslabs/aws-sdk-swift", exact: "1.7.27"),
+    .package(url: "https://github.com/awslabs/aws-sdk-swift", exact: "1.7.53"),
     .package(url: "https://github.com/stephencelis/SQLite.swift.git", exact: "0.15.4"),
     .package(url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
     .package(url: "https://github.com/aws-amplify/amplify-swift-utils-notifications.git", from: "1.1.0")
@@ -450,6 +450,29 @@ let firehoseTargets: [Target] = [
     )
 ]
 
+let eventEnrichmentTargets: [Target] = [
+    .target(
+        name: "AmplifyEventEnrichmentClient",
+        dependencies: [
+            .target(name: "AmplifyFoundation"),
+        ],
+        path: "AmplifyClients/AmplifyEventEnrichmentClient/Sources",
+        resources: [
+            .copy("Resources/PrivacyInfo.xcprivacy")
+        ],
+        swiftSettings: [
+            .enableUpcomingFeature("StrictConcurrency")
+        ]
+    ),
+    .testTarget(
+        name: "AmplifyEventEnrichmentClientTests",
+        dependencies: [
+            "AmplifyEventEnrichmentClient"
+        ],
+        path: "AmplifyClients/AmplifyEventEnrichmentClient/Tests/UnitTests"
+    )
+]
+
 let pushNotificationsTargets: [Target] = [
     .target(
         name: "AWSPinpointPushNotificationsPlugin",
@@ -469,6 +492,31 @@ let pushNotificationsTargets: [Target] = [
         ],
         path: "AmplifyPlugins/Notifications/Push/Tests/AWSPinpointPushNotificationsPluginUnitTests"
     )
+]
+
+let connectTargets: [Target] = [
+    .target(
+        name: "AmplifyConnectClient",
+        dependencies: [
+            .target(name: "AmplifyFoundation"),
+            .target(name: "AmplifyFoundationBridge"),
+            .product(name: "AWSClientRuntime", package: "aws-sdk-swift"),
+        ],
+        path: "AmplifyClients/AmplifyConnectClient/Sources",
+        resources: [
+            .copy("Resources/PrivacyInfo.xcprivacy")
+        ],
+        swiftSettings: [
+            .enableUpcomingFeature("StrictConcurrency")
+        ]
+    ),
+    .testTarget(
+        name: "AmplifyConnectClientTests",
+        dependencies: [
+            "AmplifyConnectClient"
+        ],
+        path: "AmplifyClients/AmplifyConnectClient/Tests/UnitTests"
+    ),
 ]
 
 let predictionsTargets: [Target] = [
@@ -592,6 +640,8 @@ targets.append(contentsOf: analyticsTargets)
 targets.append(contentsOf: recordCacheTargets)
 targets.append(contentsOf: kinesisTargets)
 targets.append(contentsOf: firehoseTargets)
+targets.append(contentsOf: connectTargets)
+targets.append(contentsOf: eventEnrichmentTargets)
 targets.append(contentsOf: pushNotificationsTargets)
 targets.append(contentsOf: internalPinpointTargets)
 targets.append(contentsOf: predictionsTargets)
@@ -658,6 +708,14 @@ let package = Package(
         .library(
             name: "AmplifyFirehoseClient",
             targets: ["AmplifyFirehoseClient"]
+        ),
+        .library(
+            name: "AmplifyConnectClient",
+            targets: ["AmplifyConnectClient"]
+        ),
+        .library(
+            name: "AmplifyEventEnrichmentClient",
+            targets: ["AmplifyEventEnrichmentClient"]
         ),
         .library(
             name: "AmplifyFoundation",

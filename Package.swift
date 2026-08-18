@@ -9,7 +9,11 @@ let platforms: [SupportedPlatform] = [
     .watchOS(.v9)
 ]
 let dependencies: [Package.Dependency] = [
-    .package(url: "https://github.com/awslabs/aws-sdk-swift", exact: "1.7.53"),
+    // Squashed, history-free mirror of awslabs/aws-sdk-swift @ 1.7.53. Contents are
+    // byte-identical to the upstream tag (verified by git tree hash); only history is
+    // dropped, which cuts ~2.9 GB from the extend-ios CI SwiftPM cache.
+    // Regenerate with extend-ios: scripts/mirror-aws-sdk-swift.sh <version>
+    .package(url: "https://github.com/paywithextend/aws-sdk-swift", exact: "1.7.53"),
     .package(url: "https://github.com/stephencelis/SQLite.swift.git", exact: "0.15.4"),
     .package(url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", from: "2.1.0"),
     .package(url: "https://github.com/aws-amplify/amplify-swift-utils-notifications.git", from: "1.1.0")
